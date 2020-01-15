@@ -1,6 +1,10 @@
 [project]
 org-name= "collibra"
-version= "0.1.1"
+version= "0.1.21"
+authors = ["wbvreeuwijk"]
+repository = "https://github.com/wbvreeuwijk/collibra-ballerina-dgc"
+keywords = ["collibra","data governance","dgc","jdbc"]
+license = ["Apache-2.0"]
 
 [platform]
 target = "java8"

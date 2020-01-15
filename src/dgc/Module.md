@@ -1,11 +1,10 @@
-This module provides and interface to the Collibra Data Governance platform
-[//]: # (above is the module summary)
-
-# Module Overview
-This module consist of three distinct components
+# A module to integrate between Collibra and Ballerina
+The `collibra/dgc` Ballerina module consist of three distinct components
 - Assettypes: These are abstractions of assettypes related to the ingestion of technical metadata
 - Client: This component takes care of connecting to the Collibra DGC API
 - JdbcJsonFactory: This component connects to a database using JDBC and uses the queries in the configuration to extract metadata from the database and build a JSON object from this. 
+
+First, user `ballerina pull collibra/dgc` to pull the latest version of the module from Ballerina central to your home directory.
 
 An example implementation would look something like:
 ```ballerina
@@ -39,7 +38,7 @@ public function main() {
 ```
 
 A large part of the functionality of this module is configured through a configuration file `ballerina.conf`
-```ballerina
+```
 [Database]
 driver="sqlserver"
 host=<database host>
