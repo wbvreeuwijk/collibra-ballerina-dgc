@@ -91,7 +91,7 @@ public type Column object {
     public Asset asset;
 
     public function __init(string name, Table | View tableOrView, Schema schema) {
-        self.asset = new (schema.asset.name + SEPERATOR + tableOrView.asset.name + SEPERATOR + name, COLUMN_ASSET, schema.asset.domain);
+        self.asset = new (tableOrView.asset.name + SEPERATOR + name, COLUMN_ASSET, schema.asset.domain);
         self.asset.addRelation(new Relation(TABLE_COLUMN_RELATION, tableOrView.asset));
         self.asset.addAttribute(new Attribute(ORIGINAL_NAME_ATTR, name));
     }

@@ -1,6 +1,9 @@
+import ballerina/crypto;
 import ballerina/http;
 import ballerina/log;
 import ballerina/mime;
+
+const BATCH_SIZE = 10000;
 
 public type Client object {
 
@@ -54,11 +57,25 @@ public type Client object {
         }
     }
 
-    public function importObjects(Object[] importObject) {
+    public function importObjects(Object[] importObject, string communityName) {
+        byte[] hash = crypto:hashMd5(communityName.toBytes());
+        string syncId = hash.toBase16();
+        log:printInfo("Synchronization ID:" + syncId);
+        log:printInfo("# Objects:" + importObject.length().toString());
         json[] assets = [];
         foreach Object o in importObject {
             assets.push(o.getJSON());
+            if (assets.length() == BATCH_SIZE) {
+                log:printInfo("# Assets:" + assets.length().toString());
+                self.importBatch(assets, syncId);
+                assets = [];
+            }
         }
+        self.importBatch(assets, syncId);
+        self.finalize(syncId);
+    }
+
+    private function importBatch(json[] assets, string syncId) {
         http:Request importRequest = self.createRequest();
         mime:Entity fileBodyPart = new;
         fileBodyPart.setContentDisposition(self.getContentDispositionForFormData("file"));
@@ -66,8 +83,14 @@ public type Client object {
         mime:Entity[] bodyParts = [fileBodyPart];
         importRequest.setBodyParts(bodyParts, contentType = mime:MULTIPART_FORM_DATA);
         log:printInfo("Submitting ImportJob");
-        var importResponse = self.clientEndpoint->post("/import/json-job", importRequest);
+        var importResponse = self.clientEndpoint->post(string `/import/synchronize/${syncId}/batch/json-job`, importRequest);
+    }
 
+
+    private function finalize(string syncId) {
+        http:Request finalizeRequest = self.createRequest();
+        log:printInfo("Finalizing ImportJob");
+        var importResponse = self.clientEndpoint->post(string `/import/synchronize/${syncId}/finalize/job`, finalizeRequest);
     }
 
     private function getContentDispositionForFormData(string partName)
@@ -77,6 +100,5 @@ public type Client object {
         contentDisposition.disposition = "form-data";
         return contentDisposition;
     }
-
 };
 

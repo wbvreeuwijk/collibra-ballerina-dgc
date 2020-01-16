@@ -1,6 +1,6 @@
 [project]
 org-name= "collibra"
-version= "0.1.21"
+version= "0.1.23"
 authors = ["wbvreeuwijk"]
 repository = "https://github.com/wbvreeuwijk/collibra-ballerina-dgc"
 keywords = ["collibra","data governance","dgc","jdbc"]
@@ -8,13 +8,5 @@ license = ["Apache-2.0"]
 
 [platform]
 target = "java8"
-
-    [[platform.libraries]]
-    artafactId = "mssql-connector-java"
-    version = "7.4.1"
-    path = "./lib/mssql-jdbc-7.4.1.jre8.jar"
-    groupId = "mssql"
-    modules = ["ms.jdbc.extractor","generic.jdbc.extractor"]
-
 
 [dependencies]
